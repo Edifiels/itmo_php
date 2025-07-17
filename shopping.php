@@ -48,14 +48,14 @@ $cheapProduct = array_search($minPrice, $products);
             </tr>
             <?php foreach ($products as $product => $price): ?>
             <tr>
-                <td><?= $product ?></td>
-                <td><?= number_format($price, 2) ?></td>
-                <td><?= round(($price / $totalSum) * 100, 1) ?>%</td>
+                <td><?php echo $product ?></td>
+                <td><?php echo number_format($price, 2) ?></td>
+                <td><?php echo round(($price / $totalSum) * 100, 1) ?>%</td>
             </tr>
             <?php endforeach; ?>
             <tr class="total-row">
                 <td>ИТОГО:</td>
-                <td><?= number_format($totalSum, 2) ?></td>
+                <td><?php echo number_format($totalSum, 2) ?></td>
                 <td>100%</td>
             </tr>
         </table>
@@ -63,13 +63,13 @@ $cheapProduct = array_search($minPrice, $products);
         <div class="stats">
             <div class="stat-card">
                 <h3>📊 Статистика</h3>
-                <p>Товаров: <?= count($products) ?></p>
-                <p>Средняя цена: <?= number_format($averagePrice, 2) ?> руб.</p>
+                <p>Товаров: <?php echo count($products) ?></p>
+                <p>Средняя цена: <?php echo number_format($averagePrice, 2) ?> руб.</p>
             </div>
             <div class="stat-card">
                 <h3>💰 Диапазон цен</h3>
-                <p>Самый дорогой: <?= $expensiveProduct ?> (<?= $maxPrice ?> руб.)</p>
-                <p>Самый дешевый: <?= $cheapProduct ?> (<?= $minPrice ?> руб.)</p>
+                <p>Самый дорогой: <?php echo $expensiveProduct ?> (<?php echo $maxPrice ?> руб.)</p>
+                <p>Самый дешевый: <?php echo $cheapProduct ?> (<?php echo $minPrice ?> руб.)</p>
             </div>
         </div>
     </div>

@@ -11,6 +11,6 @@
 <body>
     <h1><?php echo "Привет, мир!"; ?></h1>
     <p>Сегодня: <?php echo date('d.m.Y H:i:s'); ?></p>
-    <p>Версия PHP: <?= phpversion() ?></p>
+    <p>Версия PHP: <?php echo phpversion() ?></p>
 </body>
 </html>

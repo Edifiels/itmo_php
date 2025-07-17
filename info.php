@@ -40,19 +40,19 @@ $status = $isStudent ? "Студент" : "Работает";
 <body>
     <div class="info-card">
         <h2>Карточка пользователя</h2>
-        <p><strong>ФИО:</strong> <?= $fullName ?></p>
-        <p><strong>Возраст:</strong> <?= $age ?> лет (рожден в <?= $birthYear ?> году)</p>
-        <p><strong>Город:</strong> <?= $city ?></p>
-        <p><strong>Статус:</strong> <?= $status ?></p>
-        <p><strong>Зарплата:</strong> <?= number_format($salary, 2, ',', ' ') ?> руб.</p>
+        <p><strong>ФИО:</strong> <?php echo $fullName ?></p>
+        <p><strong>Возраст:</strong> <?php echo $age ?> лет (рожден в <?php echo $birthYear ?> году)</p>
+        <p><strong>Город:</strong> <?php echo $city ?></p>
+        <p><strong>Статус:</strong> <?php echo $status ?></p>
+        <p><strong>Зарплата:</strong> <?php echo number_format($salary, 2, ',', ' ') ?> руб.</p>
         
         <h3>Увлечения:</h3>
         <?php foreach ($hobbies as $hobby): ?>
-            <span class="hobby"><?= $hobby ?></span>
+            <span class="hobby"><?php echo $hobby ?></span>
         <?php endforeach; ?>
         
         <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
-            Страница сгенерирована: <?= date('d.m.Y в H:i:s') ?>
+            Страница сгенерирована: <?php echo date('d.m.Y в H:i:s') ?>
         </p>
     </div>
 </body>
