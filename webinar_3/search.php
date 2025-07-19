@@ -81,7 +81,7 @@ $totalViews = array_sum(array_column($searchResults, 'meta.views'));
                     name="q" 
                     class="search-input" 
                     placeholder="Введите поисковый запрос..." 
-                    value="<?= htmlspecialchars($searchQuery) ?>"
+                    value="<?php echo htmlspecialchars($searchQuery) ?>"
                 >
                 <button type="submit" class="search-btn">Найти</button>
             </form>
@@ -92,8 +92,8 @@ $totalViews = array_sum(array_column($searchResults, 'meta.views'));
                     <select name="category" class="filter-select" onchange="this.form.submit()">
                         <option value="0">Все категории</option>
                         <?php foreach ($categories as $category): ?>
-                        <option value="<?= $category['id'] ?>" <?= $categoryFilter === $category['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($category['name']) ?>
+                        <option value="<?php echo $category['id'] ?>" <?php echo $categoryFilter === $category['id'] ? 'selected' : '' ?>>
+                            <?php echo htmlspecialchars($category['name']) ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
@@ -104,16 +104,16 @@ $totalViews = array_sum(array_column($searchResults, 'meta.views'));
                     <select name="author" class="filter-select" onchange="this.form.submit()">
                         <option value="0">Все авторы</option>
                         <?php foreach ($authors as $author): ?>
-                        <option value="<?= $author['id'] ?>" <?= $authorFilter === $author['id'] ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($author['name']) ?>
+                        <option value="<?php echo $author['id'] ?>" <?php echo $authorFilter === $author['id'] ? 'selected' : '' ?>>
+                            <?php echo htmlspecialchars($author['name']) ?>
                         </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 
                 <!-- Скрытые поля для сохранения других параметров -->
-                <input type="hidden" name="q" value="<?= htmlspecialchars($searchQuery) ?>">
-                <input type="hidden" name="tag" value="<?= htmlspecialchars($tagFilter) ?>">
+                <input type="hidden" name="q" value="<?php echo htmlspecialchars($searchQuery) ?>">
+                <input type="hidden" name="tag" value="<?php echo htmlspecialchars($tagFilter) ?>">
             </div>
         </div>
         
@@ -122,15 +122,15 @@ $totalViews = array_sum(array_column($searchResults, 'meta.views'));
             <div class="results-header">
                 <div class="results-stats">
                     <div class="stat-item">
-                        <div class="stat-number"><?= $totalResults ?></div>
+                        <div class="stat-number"><?php echo $totalResults ?></div>
                         <div>Найдено статей</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number"><?= number_format($totalViews) ?></div>
+                        <div class="stat-number"><?php echo number_format($totalViews) ?></div>
                         <div>Общие просмотры</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number"><?= round($totalViews / $totalResults) ?></div>
+                        <div class="stat-number"><?php echo round($totalViews / $totalResults) ?></div>
                         <div>Среднее просмотров</div>
                     </div>
                 </div>
@@ -139,27 +139,27 @@ $totalViews = array_sum(array_column($searchResults, 'meta.views'));
             <?php foreach ($searchResults as $article): ?>
             <div class="result-item">
                 <h2 class="result-title">
-                    <a href="article.php?id=<?= $article['id'] ?>">
-                        <?= htmlspecialchars($article['title']) ?>
+                    <a href="article.php?id=<?php echo $article['id'] ?>">
+                        <?php echo htmlspecialchars($article['title']) ?>
                     </a>
                 </h2>
                 
                 <p class="result-excerpt">
-                    <?= htmlspecialchars($article['excerpt']) ?>
+                    <?php echo htmlspecialchars($article['excerpt']) ?>
                 </p>
                 
                 <div class="result-meta">
-                    <span>👤 <?= htmlspecialchars($article['author']['name']) ?></span>
-                    <span>📁 <?= htmlspecialchars($article['category']['name']) ?></span>
-                    <span>📅 <?= date('d.m.Y', strtotime($article['dates']['published'])) ?></span>
-                    <span>👁️ <?= number_format($article['meta']['views']) ?> просмотров</span>
-                    <span>⏱️ <?= $article['meta']['reading_time'] ?> мин</span>
+                    <span>👤 <?php echo htmlspecialchars($article['author']['name']) ?></span>
+                    <span>📁 <?php echo htmlspecialchars($article['category']['name']) ?></span>
+                    <span>📅 <?php echo date('d.m.Y', strtotime($article['dates']['published'])) ?></span>
+                    <span>👁️ <?php echo number_format($article['meta']['views']) ?> просмотров</span>
+                    <span>⏱️ <?php echo $article['meta']['reading_time'] ?> мин</span>
                 </div>
                 
                 <div class="result-tags">
                     <?php foreach ($article['tags'] as $tag): ?>
-                        <a href="search.php?tag=<?= urlencode($tag['slug']) ?>" class="tag">
-                            #<?= htmlspecialchars($tag['name']) ?>
+                        <a href="search.php?tag=<?php echo urlencode($tag['slug']) ?>" class="tag">
+                            #<?php echo htmlspecialchars($tag['name']) ?>
                         </a>
                     <?php endforeach; ?>
                 </div>

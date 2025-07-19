@@ -46,19 +46,19 @@ $totalCategories = count($categories);
         <!-- Статистика блога -->
         <section class="stats">
             <div class="stat-card">
-                <div class="stat-number"><?= $totalArticles ?></div>
+                <div class="stat-number"><?php echo $totalArticles ?></div>
                 <div>Статей</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?= number_format($totalViews) ?></div>
+                <div class="stat-number"><?php echo number_format($totalViews) ?></div>
                 <div>Просмотров</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?= $totalAuthors ?></div>
+                <div class="stat-number"><?php echo $totalAuthors ?></div>
                 <div>Авторов</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?= $totalCategories ?></div>
+                <div class="stat-number"><?php echo $totalCategories ?></div>
                 <div>Категорий</div>
             </div>
         </section>
@@ -71,30 +71,30 @@ $totalCategories = count($categories);
                 <?php foreach ($featuredArticles as $article): ?>
                 <article class="article-card">
                     <div class="article-image">
-                        📖 <?= htmlspecialchars($article['title']) ?>
+                        📖 <?php echo htmlspecialchars($article['title']) ?>
                     </div>
                     <div class="article-content">
-                        <h3 class="article-title"><?= htmlspecialchars($article['title']) ?></h3>
-                        <p class="article-excerpt"><?= htmlspecialchars($article['excerpt']) ?></p>
+                        <h3 class="article-title"><?php echo htmlspecialchars($article['title']) ?></h3>
+                        <p class="article-excerpt"><?php echo htmlspecialchars($article['excerpt']) ?></p>
                         
                         <div class="article-meta">
-                            <span>👤 <?= htmlspecialchars($article['author']['name']) ?></span>
-                            <span class="category-badge"><?= htmlspecialchars($article['category']['name']) ?></span>
+                            <span>👤 <?php echo htmlspecialchars($article['author']['name']) ?></span>
+                            <span class="category-badge"><?php echo htmlspecialchars($article['category']['name']) ?></span>
                         </div>
                         
                         <div class="article-tags">
                             <?php foreach ($article['tags'] as $tag): ?>
-                                <span class="tag">#<?= htmlspecialchars($tag['name']) ?></span>
+                                <span class="tag">#<?php echo htmlspecialchars($tag['name']) ?></span>
                             <?php endforeach; ?>
                         </div>
                         
                         <div class="article-stats">
-                            <span>👁️ <?= number_format($article['meta']['views']) ?> просмотров</span>
-                            <span>❤️ <?= $article['meta']['likes'] ?> лайков</span>
-                            <span>⏱️ <?= $article['meta']['reading_time'] ?> мин</span>
+                            <span>👁️ <?php echo number_format($article['meta']['views']) ?> просмотров</span>
+                            <span>❤️ <?php echo $article['meta']['likes'] ?> лайков</span>
+                            <span>⏱️ <?php echo $article['meta']['reading_time'] ?> мин</span>
                         </div>
                         
-                        <a href="article.php?id=<?= $article['id'] ?>" class="read-more">Читать далее →</a>
+                        <a href="article.php?id=<?php echo $article['id'] ?>" class="read-more">Читать далее →</a>
                     </div>
                 </article>
                 <?php endforeach; ?>
@@ -109,31 +109,31 @@ $totalCategories = count($categories);
                 <?php foreach ($allArticles as $article): ?>
                 <article class="article-card">
                     <div class="article-image">
-                        📄 <?= htmlspecialchars($article['category']['name']) ?>
+                        📄 <?php echo htmlspecialchars($article['category']['name']) ?>
                     </div>
                     <div class="article-content">
-                        <h3 class="article-title"><?= htmlspecialchars($article['title']) ?></h3>
-                        <p class="article-excerpt"><?= htmlspecialchars($article['excerpt']) ?></p>
+                        <h3 class="article-title"><?php echo htmlspecialchars($article['title']) ?></h3>
+                        <p class="article-excerpt"><?php echo htmlspecialchars($article['excerpt']) ?></p>
                         
                         <div class="article-meta">
-                            <span>👤 <?= htmlspecialchars($article['author']['name']) ?></span>
-                            <span>📅 <?= date('d.m.Y', strtotime($article['dates']['published'])) ?></span>
+                            <span>👤 <?php echo htmlspecialchars($article['author']['name']) ?></span>
+                            <span>📅 <?php echo date('d.m.Y', strtotime($article['dates']['published'])) ?></span>
                         </div>
                         
                         <div class="article-tags">
                             <?php foreach ($article['tags'] as $tag): ?>
-                                <span class="tag">#<?= htmlspecialchars($tag['name']) ?></span>
+                                <span class="tag">#<?php echo htmlspecialchars($tag['name']) ?></span>
                             <?php endforeach; ?>
                         </div>
                         
                         <div class="article-stats">
-                            <span>👁️ <?= number_format($article['meta']['views']) ?></span>
-                            <span>❤️ <?= $article['meta']['likes'] ?></span>
-                            <span>💬 <?= $article['meta']['comments_count'] ?></span>
-                            <span>⏱️ <?= $article['meta']['reading_time'] ?> мин</span>
+                            <span>👁️ <?php echo number_format($article['meta']['views']) ?></span>
+                            <span>❤️ <?php echo $article['meta']['likes'] ?></span>
+                            <span>💬 <?php echo $article['meta']['comments_count'] ?></span>
+                            <span>⏱️ <?php echo $article['meta']['reading_time'] ?> мин</span>
                         </div>
                         
-                        <a href="article.php?id=<?= $article['id'] ?>" class="read-more">Читать далее →</a>
+                        <a href="article.php?id=<?php echo $article['id'] ?>" class="read-more">Читать далее →</a>
                     </div>
                 </article>
                 <?php endforeach; ?>
