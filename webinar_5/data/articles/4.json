@@ -1,0 +1,13 @@
+{
+    "title": "JavaScript ES2024: Новинки года",
+    "content": "JavaScript продолжает развиваться. Array.with() позволяет создавать новые массивы с измененными элементами. Object.groupBy() упрощает группировку данных. Promise.withResolvers() дает больше контроля над промисами. Temporal API наконец заменит Date. Import attributes улучшают работу с модулями. Decorators стандартизируются. Эти нововведения делают JavaScript еще более мощным и удобным для разработки.",
+    "excerpt": "Обзор новых возможностей JavaScript ES2024",
+    "author_id": 3,
+    "category_id": 2,
+    "date": "2025-07-05",
+    "reading_time": 6,
+    "tags": [
+        "JavaScript",
+        "Frontend"
+    ]
+}
