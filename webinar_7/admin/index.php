@@ -117,7 +117,7 @@ $pendingComments = getAllComments('pending');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Управление статьями | IT Blog</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <style>
         .admin-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

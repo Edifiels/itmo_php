@@ -43,7 +43,7 @@ $similarArticles = getSimilarArticles($articleId);
 $commentMessage = '';
 $commentError = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $authorName = sanitizeString($_POST['author_name'] ?? '');
     $authorEmail = trim($_POST['author_email'] ?? '');
     $commentContent = sanitizeString($_POST['comment_content'] ?? '');

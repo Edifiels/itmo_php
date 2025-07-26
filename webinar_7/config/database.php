@@ -3,7 +3,7 @@
 
 // Настройки подключения к MySQL
 define('DB_HOST', 'MySQL-8.4');
-define('DB_NAME', 'blog_db');
+define('DB_NAME', 'it_blog_db');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 define('DB_CHARSET', 'utf8mb4');

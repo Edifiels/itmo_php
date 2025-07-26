@@ -79,7 +79,7 @@ $commentStats = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Модерация комментариев | IT Blog</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <style>
         .admin-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -461,7 +461,7 @@ $commentStats = [
                         <div class="comment-meta">
                             📧 <?php echo htmlspecialchars($comment['author_email']) ?> • 
                             📅 <?php echo formatDateTime($comment['created_at']) ?> • 
-                            📄 К статье: <a href="article.php?id=<?php echo $comment['article_id'] ?>" target="_blank"><?php echo htmlspecialchars($comment['article_title']) ?></a>
+                            📄 К статье: <a href="../article.php?id=<?php echo $comment['article_id'] ?>" target="_blank"><?php echo htmlspecialchars($comment['article_title']) ?></a>
                         </div>
                     </div>
                     <div class="comment-status <?php echo $comment['status'] ?>">
@@ -508,7 +508,7 @@ $commentStats = [
                         </button>
                     </form>
                     
-                    <a href="article.php?id=<?php echo $comment['article_id'] ?>#comments" target="_blank" class="btn btn-view">
+                    <a href="../article.php?id=<?php echo $comment['article_id'] ?>#comments" target="_blank" class="btn btn-view">
                         👁️ Просмотреть
                     </a>
                 </div>

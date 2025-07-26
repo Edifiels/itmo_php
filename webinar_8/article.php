@@ -57,7 +57,7 @@ try {
     $commentMessage = '';
     $commentError = '';
     
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_comment'])) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $authorName = HelperService::sanitizeString($_POST['author_name'] ?? '');
         $authorEmail = trim($_POST['author_email'] ?? '');
         $commentContent = HelperService::sanitizeString($_POST['comment_content'] ?? '');
