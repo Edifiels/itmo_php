@@ -72,11 +72,6 @@ function getApiVersion() {
         return (int)$matches[1];
     }
     
-    // Проверяем URL
-    if (preg_match('#/v(\d+)/#', $path, $matches)) {
-        return (int)$matches[1];
-    }
-    
     // Проверяем параметр запроса
     if (isset($_GET['version'])) {
         return (int)$_GET['version'];
