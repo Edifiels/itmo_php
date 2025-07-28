@@ -1,0 +1,36 @@
+# api/.htaccess - Исправленная версия для устранения 301 редиректа
+
+RewriteEngine On
+
+# Отключаем автоматические редиректы
+DirectoryIndex index.php
+DirectorySlash Off
+
+# CORS заголовки
+Header always set Access-Control-Allow-Origin "*"
+Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-API-Version"
+
+# Обработка OPTIONS запросов
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Специальная обработка корневого пути для избежания 301
+RewriteRule ^$ index.php [QSA,L]
+
+# Все остальные запросы (кроме реальных файлов)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Безопасность
+<Files ".htaccess">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Настройки кэширования
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType application/json "access plus 0 seconds"
+</IfModule>
