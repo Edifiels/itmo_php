@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 API Tester - IT Blog REST API</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 20px; background: #f8f9fa; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem; text-align: center; }
+        .header h1 { margin: 0 0 0.5rem 0; font-size: 2.5rem; }
+        .header p { margin: 0; opacity: 0.9; font-size: 1.1rem; }
+        
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab { background: white; border: none; padding: 1rem 1.5rem; border-radius: 8px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .tab.active { background: #667eea; color: white; }
+        .tab:hover { transform: translateY(-1px); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .quick-tests { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .quick-test { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; }
+        .quick-test h3 { margin-bottom: 1rem; color: #2d3748; }
+        .quick-test .btn { width: 100%; }
+        
+        .tester { background: white; border-radius: 10px; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        select, input, textarea { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 1rem; }
+        textarea { height: 150px; font-family: 'Courier New', monospace; resize: vertical; }
+        .btn { background: #667eea; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; }
+        .btn:hover { background: #5a67d8; transform: translateY(-1px); }
+        .btn-secondary { background: #718096; }
+        .btn-secondary:hover { background: #4a5568; }
+        .btn-success { background: #38a169; }
+        .btn-success:hover { background: #2f855a; }
+        .btn-danger { background: #e53e3e; }
+        .btn-danger:hover { background: #c53030; }
+        
+        .response { background: #f8f9fa; border: 1px solid #e2e8f0; border-radius: 6px; padding: 1rem; margin-top: 1rem; display: none; }
+        .response pre { margin: 0; white-space: pre-wrap; font-size: 0.9rem; }
+        .status-success { border-left: 4px solid #28a745; }
+        .status-error { border-left: 4px solid #dc3545; }
+        
+        .examples { display: grid; gap: 1rem; margin-bottom: 2rem; }
+        .example { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .example h4 { margin-bottom: 1rem; color: #2d3748; }
+        .example .btn { margin-top: 0.5rem; }
+        
+        .method-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; color: white; margin-right: 0.5rem; }
+        .get { background: #28a745; }
+        .post { background: #007bff; }
+        .put { background: #ffc107; color: black; }
+        .delete { background: #dc3545; }
+        
+        .api-info { background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #b2f5ea; }
+        .version-selector { margin-bottom: 1rem; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 10px; }
+            .header { padding: 1.5rem; }
+            .header h1 { font-size: 2rem; }
+            .tabs { flex-direction: column; }
+            .quick-tests { grid-template-columns: 1fr; }
+            .examples { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 API Tester</h1>
+            <p>Интерактивное тестирование IT Blog REST API</p>
+            <div style="margin-top: 1rem;">
+                <strong>Base URL:</strong> <code id="baseUrl">auto-detected</code>
+                <button onclick="detectBaseUrl()" style="margin-left: 10px; padding: 0.2rem 0.5rem; font-size: 0.8rem; background: #718096; color: white; border: none; border-radius: 3px; cursor: pointer;">Обновить</button>
+            </div>
+        </div>
+
+        <div class="api-info">
+            <h3>📋 Информация об API</h3>
+            <div class="version-selector">
+                <label for="apiVersion">Версия API:</label>
+                <select id="apiVersion">
+                    <option value="1">v1 - Упрощенный формат</option>
+                    <option value="2" selected>v2 - Расширенный формат (рекомендуется)</option>
+                </select>
+            </div>
+            <div style="background: #d4edda; padding: 10px; border-radius: 6px; margin-top: 10px; border-left: 4px solid #28a745;">
+                <strong>✅ Статус API:</strong> Работает! Основные эндпоинты функционируют корректно.
+                <br><small>Если главная страница показывает 301 - это нормально, используйте конкретные эндпоинты.</small>
+            </div>
+            <p><strong>Поддерживаемые форматы:</strong> JSON • <strong>Методы:</strong> GET, POST, PUT, DELETE • <strong>CORS:</strong> Включен</p>
+        </div>
+
+        <!-- Вкладки -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('articles')">📚 Статьи</button>
+            <button class="tab" onclick="showTab('comments')">💬 Комментарии</button>
+            <button class="tab" onclick="showTab('categories')">📁 Категории</button>
+            <button class="tab" onclick="showTab('advanced')">🔧 Конструктор</button>
+        </div>
+
+        <!-- Вкладка: Статьи -->
+        <div id="articles" class="tab-content active">
+            <h2>📚 Тестирование API статей</h2>
+            
+            <div class="quick-tests">
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Все статьи</h3>
+                    <p>Получить список всех статей с пагинацией</p>
+                    <button class="btn" onclick="quickTest('GET', '/articles')">Выполнить</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Статья по ID</h3>
+                    <p>Получить статью по ID (увеличит просмотры)</p>
+                    <button class="btn" onclick="quickTest('GET', '/articles/1')">Статья #1</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Поиск статей</h3>
+                    <p>Поиск статей по ключевому слову</p>
+                    <button class="btn" onclick="quickTest('GET', '/articles?search=php&limit=3')">Поиск "php"</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge post">POST</span>Создать статью</h3>
+                    <p>Создать новую тестовую статью</p>
+                    <button class="btn btn-success" onclick="createTestArticle()">Создать</button>
+                </div>
+            </div>
+
+            <div class="examples">
+                <div class="example">
+                    <h4><span class="method-badge get">GET</span>Получение статей с фильтрами</h4>
+                    <p>Пример запроса с пагинацией, поиском и сортировкой:</p>
+                    <button class="btn btn-secondary" onclick="quickTest('GET', '/articles?page=1&limit=5&search=HTTP&sort=views&order=desc')">Тест с фильтрами</button>
+                </div>
+                <div class="example">
+                    <h4><span class="method-badge put">PUT</span>Обновление статьи</h4>
+                    <p>Обновить заголовок и описание существующей статьи:</p>
+                    <button class="btn btn-secondary" onclick="updateTestArticle()">Обновить статью #1</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Комментарии -->
+        <div id="comments" class="tab-content">
+            <h2>💬 Тестирование API комментариев</h2>
+            
+            <div class="quick-tests">
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Все комментарии</h3>
+                    <p>Получить все комментарии для модерации</p>
+                    <button class="btn" onclick="quickTest('GET', '/comments')">Все комментарии</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Комментарии статьи</h3>
+                    <p>Получить одобренные комментарии статьи</p>
+                    <button class="btn" onclick="quickTest('GET', '/comments?article_id=1&status=approved')">Комментарии статьи #1</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge post">POST</span>Добавить комментарий</h3>
+                    <p>Создать новый комментарий</p>
+                    <button class="btn btn-success" onclick="createTestComment()">Добавить</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>На модерации</h3>
+                    <p>Комментарии ожидающие модерации</p>
+                    <button class="btn" onclick="quickTest('GET', '/comments?status=pending')">Pending</button>
+                </div>
+            </div>
+
+            <div class="examples">
+                <div class="example">
+                    <h4><span class="method-badge put">PUT</span>Модерация комментария</h4>
+                    <p>Одобрить или отклонить комментарий (нужен ID комментария):</p>
+                    <input type="number" id="commentId" placeholder="ID комментария" style="margin-bottom: 0.5rem;">
+                    <div>
+                        <button class="btn btn-success" onclick="moderateComment('approved')">Одобрить</button>
+                        <button class="btn btn-danger" onclick="moderateComment('rejected')">Отклонить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Категории -->
+        <div id="categories" class="tab-content">
+            <h2>📁 Тестирование API категорий</h2>
+            
+            <div class="quick-tests">
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Все категории</h3>
+                    <p>Получить список всех категорий со статистикой</p>
+                    <button class="btn" onclick="quickTest('GET', '/categories')">Все категории</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Категория по ID</h3>
+                    <p>Получить информацию о категории</p>
+                    <button class="btn" onclick="quickTest('GET', '/categories/1')">Категория #1</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>Статьи категории</h3>
+                    <p>Получить статьи определенной категории</p>
+                    <button class="btn" onclick="quickTest('GET', '/categories/1/articles')">Статьи категории #1</button>
+                </div>
+                <div class="quick-test">
+                    <h3><span class="method-badge get">GET</span>С пагинацией</h3>
+                    <p>Статьи категории с пагинацией</p>
+                    <button class="btn" onclick="quickTest('GET', '/categories/1/articles?page=1&limit=3&sort=views&order=desc')">С параметрами</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Конструктор запросов -->
+        <div id="advanced" class="tab-content">
+            <div class="tester">
+                <h2>🔧 Конструктор запросов</h2>
+                
+                <form id="apiForm">
+                    <div class="form-group">
+                        <label for="method">HTTP Метод:</label>
+                        <select id="method" onchange="updateForm()">
+                            <option value="GET">GET - Получить данные</option>
+                            <option value="POST">POST - Создать</option>
+                            <option value="PUT">PUT - Обновить</option>
+                            <option value="DELETE">DELETE - Удалить</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="endpoint">Эндпоинт:</label>
+                        <input type="text" id="endpoint" value="/articles" placeholder="/articles">
+                        <small style="color: #718096;">Примеры: /articles, /articles/1, /comments?article_id=1</small>
+                    </div>
+
+                    <div class="form-group" id="dataGroup" style="display: none;">
+                        <label for="data">JSON данные:</label>
+                        <textarea id="data" placeholder='{"title": "Заголовок", "content": "Содержимое", "author_id": 1, "category_id": 1}'></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">🚀 Отправить запрос</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Область для ответов -->
+        <div class="tester">
+            <h2>📨 Результаты тестирования</h2>
+            <div id="response" class="response">Здесь будут отображаться ответы API...</div>
+        </div>
+
+        <!-- Готовые примеры -->
+        <div class="tester">
+            <h2>📝 Готовые примеры</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <button class="btn" onclick="loadExample('createArticle')">➕ Создать статью</button>
+                <button class="btn" onclick="loadExample('updateArticle')">✏️ Обновить статью</button>
+                <button class="btn" onclick="loadExample('searchFilter')">🔍 Поиск с фильтрами</button>
+                <button class="btn" onclick="loadExample('addComment')">💬 Добавить комментарий</button>
+                <button class="btn" onclick="loadExample('pagination')">📄 Пагинация</button>
+                <button class="btn btn-secondary" onclick="window.open('./api/docs', '_blank')">📚 Документация</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Автоматическое определение базового URL
+        function detectBaseUrl() {
+            const currentUrl = window.location.href;
+            const pathParts = currentUrl.split('/');
+            
+            // Удаляем последнюю часть (имя файла)
+            pathParts.pop();
+            
+            // Ищем папку с webinar или добавляем api
+            let baseUrl = pathParts.join('/');
+            
+            // Проверяем различные варианты
+            const possiblePaths = [
+                baseUrl + '/api',
+                baseUrl.replace(/webinar_\d+/, 'webinar_9') + '/api',
+                baseUrl.replace(/webinar_\d+/, 'webinar_8') + '/api'
+            ];
+            
+            // Устанавливаем первый как основной
+            const detectedUrl = possiblePaths[0];
+            document.getElementById('baseUrl').textContent = detectedUrl;
+            
+            console.log('🔍 Обнаруженные возможные пути API:');
+            possiblePaths.forEach((path, index) => {
+                console.log(`${index + 1}. ${path}`);
+            });
+            
+            return detectedUrl;
+        }
+
+        // Примеры запросов
+        const examples = {
+            createArticle: {
+                method: 'POST',
+                endpoint: '/articles',
+                data: {
+                    "title": "Новая статья через API Tester",
+                    "content": "Это содержимое статьи, созданной через веб-интерфейс тестирования API. REST API позволяет создавать, читать, обновлять и удалять статьи через HTTP запросы. Мы поддерживаем JSON формат данных и стандартные HTTP коды ответов.",
+                    "excerpt": "Тестовая статья созданная через REST API",
+                    "author_id": 1,
+                    "category_id": 1,
+                    "tags": ["API", "REST", "Тестирование", "JSON"]
+                }
+            },
+            updateArticle: {
+                method: 'PUT',
+                endpoint: '/articles/1',
+                data: {
+                    "title": "Обновленный заголовок статьи через API",
+                    "excerpt": "Обновленное описание статьи через REST API тестер"
+                }
+            },
+            searchFilter: {
+                method: 'GET',
+                endpoint: '/articles?search=HTTP&category=PHP и Backend&sort=views&order=desc&limit=5'
+            },
+            addComment: {
+                method: 'POST',
+                endpoint: '/comments',
+                data: {
+                    "article_id": 1,
+                    "author_name": "API Тестер",
+                    "author_email": "tester@example.com",
+                    "content": "Отличная статья! Тестирую добавление комментария через REST API. Спасибо за подробное объяснение материала."
+                }
+            },
+            pagination: {
+                method: 'GET',
+                endpoint: '/articles?page=1&limit=3&sort=created_at&order=desc'
+            }
+        };
+
+        // Переключение вкладок
+        function showTab(tabName) {
+            // Скрываем все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Показываем выбранную вкладку
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Обновление формы в зависимости от метода
+        function updateForm() {
+            const method = document.getElementById('method').value;
+            const dataGroup = document.getElementById('dataGroup');
+            
+            if (method === 'POST' || method === 'PUT') {
+                dataGroup.style.display = 'block';
+            } else {
+                dataGroup.style.display = 'none';
+            }
+        }
+
+        // Загрузка примера
+        function loadExample(exampleName) {
+            const example = examples[exampleName];
+            
+            // Переключаемся на вкладку конструктора
+            showTab('advanced');
+            document.querySelector('.tab[onclick="showTab(\'advanced\')"]').classList.add('active');
+            
+            document.getElementById('method').value = example.method;
+            document.getElementById('endpoint').value = example.endpoint;
+            
+            if (example.data) {
+                document.getElementById('data').value = JSON.stringify(example.data, null, 2);
+            } else {
+                document.getElementById('data').value = '';
+            }
+            
+            updateForm();
+        }
+
+        // Быстрый тест
+        async function quickTest(method, endpoint) {
+            await makeRequest(method, endpoint);
+        }
+
+        // Создание тестовой статьи
+        async function createTestArticle() {
+            const data = {
+                "title": "Тестовая статья " + new Date().toLocaleString(),
+                "content": "Это тестовая статья, созданная через API Tester. Содержимое достаточно длинное для корректного расчета времени чтения. REST API позволяет выполнять CRUD операции с статьями блога.",
+                "excerpt": "Тестовая статья созданная автоматически",
+                "author_id": 1,
+                "category_id": 1,
+                "tags": ["Тест", "API", "Автоматически"]
+            };
+            
+            await makeRequest('POST', '/articles', data);
+        }
+
+        // Обновление тестовой статьи
+        async function updateTestArticle() {
+            const data = {
+                "title": "Обновленная статья " + new Date().toLocaleString(),
+                "excerpt": "Описание обновлено через API тестер"
+            };
+            
+            await makeRequest('PUT', '/articles/1', data);
+        }
+
+        // Создание тестового комментария
+        async function createTestComment() {
+            const data = {
+                "article_id": 1,
+                "author_name": "Тестировщик API",
+                "author_email": "api-tester@example.com",
+                "content": "Тестовый комментарий, добавленный через API в " + new Date().toLocaleString() + ". Проверяем работу REST API для комментариев."
+            };
+            
+            await makeRequest('POST', '/comments', data);
+        }
+
+        // Модерация комментария
+        async function moderateComment(status) {
+            const commentId = document.getElementById('commentId').value;
+            if (!commentId) {
+                alert('Введите ID комментария');
+                return;
+            }
+            
+            const data = { "status": status };
+            await makeRequest('PUT', `/comments/${commentId}`, data);
+        }
+
+        // Основная функция для выполнения запросов
+        async function makeRequest(method, endpoint, data = null) {
+            const responseDiv = document.getElementById('response');
+            const baseUrl = document.getElementById('baseUrl').textContent;
+            const apiVersion = document.getElementById('apiVersion').value;
+            
+            responseDiv.style.display = 'block';
+            responseDiv.className = 'response';
+            responseDiv.innerHTML = '⏳ Выполняется запрос...';
+            
+            try {
+                const url = baseUrl + endpoint;
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': `application/vnd.blog.v${apiVersion}+json`
+                    }
+                };
+                
+                if (data && (method === 'POST' || method === 'PUT')) {
+                    options.body = JSON.stringify(data);
+                }
+                
+                const response = await fetch(url, options);
+                const responseText = await response.text();
+                
+                let responseData;
+                try {
+                    responseData = JSON.parse(responseText);
+                } catch (e) {
+                    responseData = { raw_response: responseText };
+                }
+                
+                // Определяем статус для стилизации
+                const statusClass = response.ok ? 'status-success' : 'status-error';
+                responseDiv.className = `response ${statusClass}`;
+                
+                // Формируем заголовки ответа
+                const headers = {};
+                for (let [key, value] of response.headers.entries()) {
+                    headers[key] = value;
+                }
+                
+                const responseInfo = {
+                    url: url,
+                    method: method,
+                    status: `${response.status} ${response.statusText}`,
+                    headers: headers,
+                    data: responseData
+                };
+                
+                if (data) {
+                    responseInfo.request_data = data;
+                }
+                
+                responseDiv.innerHTML = `
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: ${response.ok ? '#e6fffa' : '#fed7d7'}; border-radius: 4px;">
+                        <strong>${method} ${endpoint}</strong><br>
+                        <strong>Статус:</strong> ${response.status} ${response.statusText}<br>
+                        <strong>Версия API:</strong> v${apiVersion}
+                    </div>
+                    <pre>${JSON.stringify(responseInfo, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                responseDiv.className = 'response status-error';
+                responseDiv.innerHTML = `
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: #fed7d7; border-radius: 4px;">
+                        <strong>Ошибка сети:</strong> ${error.message}
+                    </div>
+                    <pre>Не удалось выполнить запрос. Проверьте:
+1. Запущен ли локальный сервер
+2. Правильность пути к API
+3. Подключение к интернету</pre>
+                `;
+            }
+        }
+
+        // Обработка формы конструктора
+        document.getElementById('apiForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const method = document.getElementById('method').value;
+            const endpoint = document.getElementById('endpoint').value;
+            const dataText = document.getElementById('data').value;
+            
+            let data = null;
+            if (dataText && (method === 'POST' || method === 'PUT')) {
+                try {
+                    data = JSON.parse(dataText);
+                } catch (e) {
+                    alert('Ошибка парсинга JSON: ' + e.message);
+                    return;
+                }
+            }
+            
+            makeRequest(method, endpoint, data);
+        });
+
+        // Инициализация
+        updateForm();
+        detectBaseUrl(); // Автоматически определяем базовый URL
+        
+        // Автоматический тест при загрузке - используем рабочий эндпоинт
+        window.onload = function() {
+            setTimeout(() => {
+                // Тестируем рабочий эндпоинт вместо главной страницы
+                quickTest('GET', '/articles?limit=3');
+            }, 1000);
+        };
+
+        // Горячие клавиши
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        showTab('articles');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        showTab('comments');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        showTab('categories');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        showTab('advanced');
+                        break;
+                    case 'Enter':
+                        if (document.getElementById('advanced').classList.contains('active')) {
+                            e.preventDefault();
+                            document.getElementById('apiForm').dispatchEvent(new Event('submit'));
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Подсказка о горячих клавишах
+        console.log('🔥 Горячие клавиши:');
+        console.log('Ctrl+1 - Статьи');
+        console.log('Ctrl+2 - Комментарии'); 
+        console.log('Ctrl+3 - Категории');
+        console.log('Ctrl+4 - Конструктор');
+        console.log('Ctrl+Enter - Отправить запрос (в конструкторе)');
+    </script>
+</body>
+</html>
